@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/rayfanaqbil/zenverse_BE/model"
-	"github.com/rayfanaqbil/zenverse_BE/module"
+	"github.com/rayfanaqbil/zenverse-BE/model"
+	"github.com/rayfanaqbil/zenverse-BE/module"
 )
 
 func TestInsertGames(t *testing.T) {
