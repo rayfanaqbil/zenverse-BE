@@ -10,7 +10,7 @@ import (
 
 func TestInsertGames(t *testing.T) {
 	name := "Resident Evil 2 Remake"
-	rating := 10.10
+	rating := 10.0
 	desc := "A deadly virus engulfs the residents of Raccoon City in September of 1998, plunging the city into chaos as flesh eating zombies roam the streets for survivors. An unparalleled adrenaline rush, gripping storyline, and unimaginable horrors await you. Witness the return of Resident Evil 2."
 	genre := []string {"Action"}
 	devname := model.Developer{
@@ -21,11 +21,14 @@ func TestInsertGames(t *testing.T) {
 	preview := "https://www.youtube.com/watch?v=u3wS-Q2KBpk"
 	gamelogo := "https://i.ibb.co.com/Rhwmct8/re2remake.png"
 
-	insertedID := module.InsertGames(name, rating, desc, genre, devname, gamebanner, preview, gamelogo)
-	fmt.Println(insertedID)
+	insertedID, err := module.InsertGames(module.MongoConn, "Games", name, rating, desc, genre, devname, gamebanner, preview, gamelogo)
+	if err != nil {
+		t.Errorf("Error inserting data: %v", err)
+	}
+	fmt.Printf("Data berhasil disimpan dengan id %s", insertedID.Hex())
 }
 
 func TestGetAll(t *testing.T) {
-	data := module.GetAllDataGames()
+	data := module.GetAllDataGames(module.MongoConn, "Games")
 	fmt.Println(data)
 }

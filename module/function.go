@@ -3,7 +3,7 @@ package module
 import (
 	"context"
 	"fmt"
-	"os"
+	"errors"
 	"time"
 	"github.com/rayfanaqbil/zenverse-BE/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,8 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-var MongoString string = os.Getenv("MONGOSTRING")
 
 func MongoConnect(dbname string) (db *mongo.Database) {
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(MongoString))
@@ -29,23 +27,31 @@ func InsertOneDoc(db string, collection string, doc interface{}) (insertedID int
 	}
 	return insertResult.InsertedID
 }
-func InsertGames(name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, gamelogo string)  (insertedID interface{}) {
-	var datagame model.Games
-	datagame.Name = name
-	datagame.Rating = rating
-	datagame.Release = primitive.NewDateTimeFromTime(time.Now().UTC())
-	datagame.Desc = desc
-	datagame.Genre = genre
-	datagame.DevName = devname
-	datagame.GameBanner = gamebanner
-	datagame.Preview = preview
-	datagame.GameLogo = gamelogo
-	return InsertOneDoc("Zenverse", "Games", datagame)
 
+func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, gamelogo string) (insertedID primitive.ObjectID, err error) {
+	games := bson.M{
+	"name": name,
+	"rating": rating,
+	"release": primitive.NewDateTimeFromTime(time.Now().UTC()),
+	"desc": desc,
+	"genre": genre,
+	"devName": devname,
+	"gameBanner": gamebanner,
+	"preview": preview,
+	"gameLogo": gamelogo,
+	}
+	result, err := db.Collection(col).InsertOne(context.Background(), games)
+	if err != nil {
+		fmt.Printf("InsertGames: %v\n", err)
+		return
+	}
+	insertedID = result.InsertedID.(primitive.ObjectID)
+	return insertedID, nil
 }
 
-func GetAllDataGames() (data []model.Games) {
-	gem := MongoConnect("Zenverse").Collection("Games")
+
+func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
+	gem := db.Collection(col)
 	filter := bson.M{}
 	cursor, err := gem.Find(context.TODO(), filter)
 	if err != nil {
@@ -56,4 +62,29 @@ func GetAllDataGames() (data []model.Games) {
 		fmt.Println(err)
 	}
 	return
+}
+
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
+	filter := bson.M{"_id": id}
+	update := bson.M{
+		"$set": bson.M{
+			"name":    name,
+			"rating":     rating,
+			"desc":     desc,
+			"genre": genre,
+			"game_banner": gamebanner,
+			"preview":      preview,
+			"game_logo": gamelogo,
+		},
+	}
+	result, err := db.Collection(col).UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		fmt.Printf("UpdateGames: %v\n", err)
+		return err
+	}
+	if result.ModifiedCount == 0 {
+		err = errors.New("No data has been changed with the specified ID")
+		return
+	}
+	return nil
 }
