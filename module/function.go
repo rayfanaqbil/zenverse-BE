@@ -35,10 +35,10 @@ func InsertGames(db *mongo.Database, col string, name string, rating float64, de
 	"release": primitive.NewDateTimeFromTime(time.Now().UTC()),
 	"desc": desc,
 	"genre": genre,
-	"devName": devname,
-	"gameBanner": gamebanner,
+	"developer":  devname,
+	"gamebanner": gamebanner,
 	"preview": preview,
-	"gameLogo": gamelogo,
+	"gamelogo": gamelogo,
 	}
 	result, err := db.Collection(col).InsertOne(context.Background(), games)
 	if err != nil {
@@ -85,9 +85,9 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 			"rating":     rating,
 			"desc":     desc,
 			"genre": genre,
-			"game_banner": gamebanner,
+			"gamebanner": gamebanner,
 			"preview":      preview,
-			"game_logo": gamelogo,
+			"gamelogo": gamelogo,
 		},
 	}
 	result, err := db.Collection(col).UpdateOne(context.Background(), filter, update)
