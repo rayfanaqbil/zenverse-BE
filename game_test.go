@@ -6,6 +6,7 @@ import (
 
 	"github.com/rayfanaqbil/zenverse-BE/model"
 	"github.com/rayfanaqbil/zenverse-BE/module"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestInsertGames(t *testing.T) {
@@ -31,4 +32,17 @@ func TestInsertGames(t *testing.T) {
 func TestGetAll(t *testing.T) {
 	data := module.GetAllDataGames(module.MongoConn, "Games")
 	fmt.Println(data)
+}
+
+func TestGetGamesByID(t *testing.T) {
+	id := "6669e733a14721a4b789a9c4"
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		t.Fatalf("error converting id to ObjectID: %v", err)
+	}
+	geming, err := module.GetGamesByID(objectID, module.MongoConn, "Games")
+	if err != nil {
+		t.Fatalf("error calling GetPresensiFromID: %v", err)
+	}
+	fmt.Println(geming)
 }

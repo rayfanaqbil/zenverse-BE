@@ -64,6 +64,19 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 	return
 }
 
+func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games model.Games, errs error) {
+	gem := db.Collection(col)
+	filter := bson.M{"_id": _id}
+	err := gem.FindOne(context.TODO(), filter).Decode(&games)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return games, fmt.Errorf("no data found for ID %s", _id)
+		}
+		return games, fmt.Errorf("error retrieving data for ID %s: %s", _id, err.Error())
+	}
+	return games, nil
+}
+
 func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
 	filter := bson.M{"_id": id}
 	update := bson.M{
