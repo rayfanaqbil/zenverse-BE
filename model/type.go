@@ -14,6 +14,7 @@ type Games struct {
 	Dev_name     Developer           `bson:"dev_name,omitempty" json:"dev_name,omitempty"`
 	Game_banner  string              `bson:"game_banner,omitempty" json:"game_banner,omitempty"`
 	Preview      string              `bson:"preview,omitempty" json:"preview,omitempty"`
+	Link_games	 string				 `bson:"link_games,omitempty" json:"link_games,omitempty"`
 	Game_logo    string  			 `bson:"game_logo,omitempty" json:"game_logo,omitempty"`
 }
 

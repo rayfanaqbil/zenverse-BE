@@ -28,7 +28,7 @@ func InsertOneDoc(db string, collection string, doc interface{}) (insertedID int
 	return insertResult.InsertedID
 }
 
-func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, gamelogo string) (insertedID primitive.ObjectID, err error) {
+func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (insertedID primitive.ObjectID, err error) {
 	games := bson.M{
 	"name": name,
 	"rating": rating,
@@ -38,6 +38,7 @@ func InsertGames(db *mongo.Database, col string, name string, rating float64, de
 	"dev_name":  devname,
 	"game_banner": gamebanner,
 	"preview": preview,
+	"link_games": linkgames,
 	"game_logo": gamelogo,
 	}
 	result, err := db.Collection(col).InsertOne(context.Background(), games)
@@ -77,7 +78,7 @@ func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games
 	return games, nil
 }
 
-func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, gamebanner string, preview string, linkgames string, gamelogo string) (err error) {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
@@ -87,6 +88,7 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 			"genre": genre,
 			"game_banner": gamebanner,
 			"preview":      preview,
+			"link_games": linkgames,
 			"game_logo": gamelogo,
 		},
 }
@@ -99,5 +101,21 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 		err = errors.New("No data has been changed with the specified ID")
 		return
 	}
+	return nil
+}
+
+func DeleteGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) error {
+	gem := db.Collection(col)
+	filter := bson.M{"_id": _id}
+
+	result, err := gem.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error deleting data for ID %s: %s", _id, err.Error())
+	}
+
+	if result.DeletedCount == 0 {
+		return fmt.Errorf("data with ID %s not found", _id)
+	}
+
 	return nil
 }
