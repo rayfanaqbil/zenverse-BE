@@ -10,17 +10,17 @@ import (
 )
 
 func TestInsertGames(t *testing.T) {
-	name := "Resident Evil 2 Remake"
-	rating := 10.0
-	desc := "A deadly virus engulfs the residents of Raccoon City in September of 1998, plunging the city into chaos as flesh eating zombies roam the streets for survivors. An unparalleled adrenaline rush, gripping storyline, and unimaginable horrors await you. Witness the return of Resident Evil 2."
-	genre := []string {"Action"}
+	name := "Genshin Impact"
+	rating := 9.0
+	desc := "Step into Teyvat, a vast world teeming with life and flowing with elemental energy. You and your sibling arrived here from another world. Separated by an unknown god, stripped of your powers, and cast into a deep slumber, you now awake to a world very different from when you first arrived. Thus begins your journey across Teyvat to seek answers from The Seven — the gods of each element. Along the way, prepare to explore every inch of this wondrous world, join forces with a diverse range of characters, and unravel the countless mysteries that Teyvat holds..."
+	genre := []string {"Adventure game", "Action role-playing game"}
 	devname := model.Developer{
-		Name: "CAPCOM Co., Ltd.",
-		Bio:  "A remake of the original 1998 Resident Evil 2 game, it follows rookie police officer Leon S. Kennedy and student Claire Redfield as they attempt to escape from Raccoon City during a zombie apocalypse. It was released worldwide for the PlayStation 4, Windows, and Xbox One on January 25, 2019.",
+		Name: "HoYoverse",
+		Bio:  "tech otaku save the world",
 	}
-	gamebanner := "https://i.ibb.co.com/Jtbxq1Q/Resident-Evil-2-Remake-4-K-Wallpaper.jpg"
-	preview := "https://www.youtube.com/watch?v=u3wS-Q2KBpk"
-	gamelogo := "https://i.ibb.co.com/Rhwmct8/re2remake.png"
+	gamebanner := "https://i.ibb.co.com/k1KdV7t/genshin-main-banner.png"
+	preview := "https://www.youtube.com/watch?v=qqnEjmnitgc"
+	gamelogo := "https://i.ibb.co.com/Z6xFZP6/genshin-logo.png"
 
 	insertedID, err := module.InsertGames(module.MongoConn, "Games", name, rating, desc, genre, devname, gamebanner, preview, gamelogo)
 	if err != nil {

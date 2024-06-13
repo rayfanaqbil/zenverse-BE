@@ -9,7 +9,7 @@ type Games struct {
 	Name         string              `bson:"name,omitempty" json:"name,omitempty"`
 	Rating       float64             `bson:"rating,omitempty" json:"rating,omitempty"`
 	Release      primitive.DateTime  `bson:"release_date,omitempty" json:"release_date,omitempty"`
-	Desc         string              `bson:"game_desc,omitempty" json:"game_desc,omitempty"`
+	Desc         string              `bson:"desc,omitempty" json:"desc,omitempty"`
 	Genre        []string            `bson:"genre,omitempty" json:"genre,omitempty"`
 	Dev_name     Developer           `bson:"dev_name,omitempty" json:"dev_name,omitempty"`
 	Game_banner  string              `bson:"game_banner,omitempty" json:"game_banner,omitempty"`
