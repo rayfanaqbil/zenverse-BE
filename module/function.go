@@ -118,3 +118,17 @@ func DeleteGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) err
 
 	return nil
 }
+
+func InsertAdmin(db *mongo.Database, col string, username string, password string ) (insertedID primitive.ObjectID, err error) {
+	admin := bson.M{
+	"user_name" : username,
+	"password"	: password,
+	}
+	result, err := db.Collection(col).InsertOne(context.Background(), admin)
+	if err != nil {
+		fmt.Printf("InsertAdmin: %v\n", err)
+		return
+	}
+	insertedID = result.InsertedID.(primitive.ObjectID)
+	return insertedID, nil
+}

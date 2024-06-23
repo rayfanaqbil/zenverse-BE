@@ -64,3 +64,13 @@ func TestDeletePresensiByID(t *testing.T) {
 		t.Fatalf("expected data to be deleted, but it still exists")
 	}
 }
+
+func TestInsertAdmin(t *testing.T) {
+	username 	 := "Zenverse"
+	password 	 := "zenverse123"
+	insertedID, err := module.InsertAdmin(module.MongoConn, "Admin", username, password)
+	if err != nil {
+		t.Errorf("Error inserting data: %v", err)
+	}
+	fmt.Printf("Data berhasil disimpan dengan id %s", insertedID.Hex())
+}
