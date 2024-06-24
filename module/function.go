@@ -28,12 +28,13 @@ func InsertOneDoc(db string, collection string, doc interface{}) (insertedID int
 	return insertResult.InsertedID
 }
 
-func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (insertedID primitive.ObjectID, err error) {
+func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, status string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (insertedID primitive.ObjectID, err error) {
 	games := bson.M{
 	"name": name,
 	"rating": rating,
 	"release": primitive.NewDateTimeFromTime(time.Now().UTC()),
 	"desc": desc,
+	"status": status,
 	"genre": genre,
 	"dev_name":  devname,
 	"game_banner": gamebanner,
@@ -78,7 +79,7 @@ func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games
 	return games, nil
 }
 
-func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, status string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
@@ -86,6 +87,7 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 			"rating":     rating,
 			"desc":     desc,
 			"genre": genre,
+			"status": status,
 			"game_banner": gamebanner,
 			"preview":      preview,
 			"game_logo": gamelogo,
@@ -131,4 +133,24 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 	}
 	insertedID = result.InsertedID.(primitive.ObjectID)
 	return insertedID, nil
+}
+
+func Login(db *mongo.Database, col string, username string, password string) (model.Admin, error) {
+    var User model.Admin
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
+
+    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
+    if err != nil {
+        if errors.Is(err, mongo.ErrNoDocuments) {
+            return model.Admin{}, fmt.Errorf("user not found")
+        }
+        return model.Admin{}, fmt.Errorf("error finding user: %v", err)
+    }
+
+    if User.Password != password {
+        return model.Admin{}, fmt.Errorf("invalid password")
+    }
+
+    return User, nil
 }
