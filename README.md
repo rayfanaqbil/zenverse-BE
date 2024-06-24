@@ -6,11 +6,12 @@ This project is developed solely by myself, drawing inspiration from various gam
 # Major Planning
 |Plans|Status|
 |--|--|
-|Get All Data | Done✅|
+|Get All Data Games | Done✅|
 |Get By ID | Done✅|
-|Insert Data | Done✅|
-|Update Data| Done✅|
-|Delete Data | Done✅|
+|Insert Data Games | Done✅|
+|Update Data Games| Done✅|
+|Delete Data Games | Done✅|
+|Login Games | Done✅|
 |etc.| Still on planning |
 
 # Update
