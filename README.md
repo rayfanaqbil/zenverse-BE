@@ -6,11 +6,12 @@ This project is developed solely by myself, drawing inspiration from various gam
 # Major Planning
 |Plans|Status|
 |--|--|
-|Get All Data | Done✅|
+|Get All Data Games | Done✅|
 |Get By ID | Done✅|
-|Insert Data | Done✅|
-|Update Data| Done✅|
-|Delete Data | Done✅|
+|Insert Data Games | Done✅|
+|Update Data Games| Done✅|
+|Delete Data Games | Done✅|
+|Login Admin | Done✅|
 |etc.| Still on planning |
 
 # Update
@@ -28,5 +29,8 @@ This project is developed solely by myself, drawing inspiration from various gam
 |Adding Link Games Fields to Struct Games | 13/06/2024 | Minor Update |
 |Add games link fields to the insert function | 13/06/2024 | Minor Update |
 |Made Function Delete Data | 14/06/2024 | Major update |
+|Modfify Stuct Games | 24/06/2024 | Minor update |
+|Made Function Login Admin | 24/06/2024 | Major update |
+
 
 
