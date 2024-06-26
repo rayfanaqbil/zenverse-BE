@@ -79,7 +79,7 @@ func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games
 	return games, nil
 }
 
-func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, status string, genre []string, gamebanner string, preview string, gamelogo string) (err error) {
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, status string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (err error) {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
@@ -87,9 +87,11 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 			"rating":     rating,
 			"desc":     desc,
 			"genre": genre,
+			"dev_name": devname,
 			"status": status,
 			"game_banner": gamebanner,
-			"preview":      preview,
+			"preview":  preview,
+			"link_games": linkgames,
 			"game_logo": gamelogo,
 		},
 }
