@@ -156,3 +156,17 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
 
     return User, nil
 }
+
+func GetDataAdmin(db *mongo.Database, col string) (data []model.Admin) {
+	admin := db.Collection(col)
+	filter := bson.M{}
+	cursor, err := admin.Find(context.TODO(), filter)
+	if err != nil {
+		fmt.Println("GetDataAdmin: ", err)
+	}
+	err = cursor.All(context.TODO(), &data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return
+}

@@ -86,3 +86,8 @@ func TestLogin(t *testing.T) {
 		fmt.Printf("Login successful: %v\n", admin)
 	}
 }
+
+func TestGetDataAdmin(t *testing.T) {
+	data := module.GetDataAdmin(module.MongoConn, "Admin")
+	fmt.Println(data)
+}
