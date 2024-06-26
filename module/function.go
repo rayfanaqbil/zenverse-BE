@@ -28,13 +28,12 @@ func InsertOneDoc(db string, collection string, doc interface{}) (insertedID int
 	return insertResult.InsertedID
 }
 
-func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, status string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (insertedID primitive.ObjectID, err error) {
+func InsertGames(db *mongo.Database, col string, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (insertedID primitive.ObjectID, err error) {
 	games := bson.M{
 	"name": name,
 	"rating": rating,
 	"release": primitive.NewDateTimeFromTime(time.Now().UTC()),
 	"desc": desc,
-	"status": status,
 	"genre": genre,
 	"dev_name":  devname,
 	"game_banner": gamebanner,
@@ -79,7 +78,7 @@ func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games
 	return games, nil
 }
 
-func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, status string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (err error) {
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (err error) {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
@@ -88,7 +87,6 @@ func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name str
 			"desc":     desc,
 			"genre": genre,
 			"dev_name": devname,
-			"status": status,
 			"game_banner": gamebanner,
 			"preview":  preview,
 			"link_games": linkgames,
