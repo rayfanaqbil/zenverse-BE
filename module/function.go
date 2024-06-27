@@ -65,26 +65,15 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 	return
 }
 
-func GetGamesByName(db *mongo.Database, col string, name string) ([]model.Games, error) {
+func GetGamesByName(db *mongo.Database, collection string, name string) ([]model.Games, error) {
     var games []model.Games
-    collection := db.Collection(col)
     filter := bson.M{"name": bson.M{"$regex": name, "$options": "i"}}
-    cur, err := collection.Find(context.Background(), filter)
+    cursor, err := db.Collection(collection).Find(context.TODO(), filter)
     if err != nil {
-        return games, err
+        return nil, err
     }
-    defer cur.Close(context.Background())
-    
-    for cur.Next(context.Background()) {
-        var game model.Games
-        err := cur.Decode(&game)
-        if err != nil {
-            return games, err
-        }
-        games = append(games, game)
-    }
-    if err := cur.Err(); err != nil {
-        return games, err
+    if err = cursor.All(context.TODO(), &games); err != nil {
+        return nil, err
     }
     return games, nil
 }
