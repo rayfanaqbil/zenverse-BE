@@ -156,7 +156,7 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
 
     err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
     if err != nil {
-        if errors.Is(err, mongo.ErrNoDocuments) {
+        if err == mongo.ErrNoDocuments {
             return admin, fmt.Errorf("user not found")
         }
         return admin, fmt.Errorf("error finding user: %v", err)
@@ -172,6 +172,11 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
     }
 
     admin.Token = token
+
+    if err := SaveTokenToDatabase(db, token); err != nil {
+        return admin, fmt.Errorf("error saving token to database: %v", err)
+    }
+
     return admin, nil
 }
 
