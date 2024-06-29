@@ -191,11 +191,11 @@ func UpdateAdminToken(db *mongo.Database, admin model.Admin) error {
     return err
 }
 
-func SaveTokenToDatabase(token string) error {
-    db := MongoConn
+func SaveTokenToDatabase(db *mongo.Database, token string) error {
     collection := db.Collection("tokens")
     filter := bson.M{"_id": "admin_token"}
     update := bson.M{"$set": bson.M{"token": token}}
+
     _, err := collection.UpdateOne(context.Background(), filter, update, options.Update().SetUpsert(true))
     if err != nil {
         return fmt.Errorf("error saving token to database: %v", err)
