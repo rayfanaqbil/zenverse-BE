@@ -2,10 +2,12 @@ package module
 
 import (
 	"context"
+	"log"
 	"fmt"
 	"errors"
 	"time"
 	"github.com/rayfanaqbil/zenverse-BE/model"
+	"github.com/rayfanaqbil/zenverse-BE/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -91,29 +93,28 @@ func GetGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) (games
 	return games, nil
 }
 
-func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) (err error) {
+func UpdateGames(db *mongo.Database, col string, id primitive.ObjectID, name string, rating float64, desc string, genre []string, devname model.Developer, gamebanner string, preview string, linkgames string, gamelogo string) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{
 		"$set": bson.M{
-			"name":    name,
-			"rating":     rating,
-			"desc":     desc,
-			"genre": genre,
-			"dev_name": devname,
+			"name":        name,
+			"rating":      rating,
+			"desc":        desc,
+			"genre":       genre,
+			"dev_name":    devname,
 			"game_banner": gamebanner,
-			"preview":  preview,
-			"link_games": linkgames,
-			"game_logo": gamelogo,
+			"preview":     preview,
+			"link_games":  linkgames,
+			"game_logo":   gamelogo,
 		},
-}
+	}
 	result, err := db.Collection(col).UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		fmt.Printf("UpdateGames: %v\n", err)
+		log.Printf("UpdateGames: %v", err)
 		return err
 	}
 	if result.ModifiedCount == 0 {
-		err = errors.New("No data has been changed with the specified ID")
-		return
+		return errors.New("no data has been changed with the specified ID")
 	}
 	return nil
 }
@@ -148,7 +149,7 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 	return insertedID, nil
 }
 
-func Login(db *mongo.Database, col string, username string, password string) (model.Admin, error) {
+func Login(db *mongo.Database, col string, username string, password string) (string, error) {
     var User model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
@@ -156,16 +157,21 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
     err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
     if err != nil {
         if errors.Is(err, mongo.ErrNoDocuments) {
-            return model.Admin{}, fmt.Errorf("user not found")
+            return "", fmt.Errorf("user not found")
         }
-        return model.Admin{}, fmt.Errorf("error finding user: %v", err)
+        return "", fmt.Errorf("error finding user: %v", err)
     }
 
     if User.Password != password {
-        return model.Admin{}, fmt.Errorf("invalid password")
+        return "", fmt.Errorf("invalid password")
     }
 
-    return User, nil
+    token, err := config.GenerateJWT(username)
+    if err != nil {
+        return "", fmt.Errorf("error generating token: %v", err)
+    }
+
+    return token, nil
 }
 
 func GetDataAdmin(db *mongo.Database, col string) (data []model.Admin) {
