@@ -174,16 +174,18 @@ func Login(db *mongo.Database, col string, username string, password string) (st
     return token, nil
 }
 
-func GetDataAdmin(db *mongo.Database, col string) (data []model.Admin) {
-	admin := db.Collection(col)
-	filter := bson.M{}
-	cursor, err := admin.Find(context.TODO(), filter)
-	if err != nil {
-		fmt.Println("GetDataAdmin: ", err)
-	}
-	err = cursor.All(context.TODO(), &data)
-	if err != nil {
-		fmt.Println(err)
-	}
-	return
+func GetDataAdmin(db *mongo.Database, username, password string) (model.Admin, error) {
+    var admin model.Admin
+    collection := db.Collection("Admin")
+    filter := bson.M{"user_name": username, "password": password}
+    err := collection.FindOne(context.Background(), filter).Decode(&admin)
+    return admin, err
+}
+
+func UpdateAdminToken(db *mongo.Database, admin model.Admin) error {
+    collection := db.Collection("Admin")
+    filter := bson.M{"user_name": admin.User_name}
+    update := bson.M{"$set": bson.M{"token": admin.Token}}
+    _, err := collection.UpdateOne(context.Background(), filter, update)
+    return err
 }

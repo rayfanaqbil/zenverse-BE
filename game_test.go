@@ -86,11 +86,6 @@ func TestLogin(t *testing.T) {
 	}
 }
 
-func TestGetDataAdmin(t *testing.T) {
-	data := module.GetDataAdmin(module.MongoConn, "Admin")
-	fmt.Println(data)
-}
-
 func TestGetGamesByName(t *testing.T) {
 	name := "Resident Evil 2 Remake"
 	games, err := module.GetGamesByName(module.MongoConn, "Games", name)
