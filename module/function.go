@@ -7,7 +7,6 @@ import (
 	"errors"
 	"time"
 	"github.com/rayfanaqbil/zenverse-BE/model"
-	"github.com/rayfanaqbil/zenverse-BE/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -157,24 +156,13 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
     err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
     if err != nil {
         if err == mongo.ErrNoDocuments {
-            return admin, fmt.Errorf("user not found")
+            return admin, err
         }
-        return admin, fmt.Errorf("error finding user: %v", err)
+        return admin, err
     }
 
     if admin.Password != password {
-        return admin, fmt.Errorf("invalid password")
-    }
-
-    token, err := config.GenerateJWT(username)
-    if err != nil {
-        return admin, fmt.Errorf("error generating token: %v", err)
-    }
-
-    admin.Token = token
-
-    if err := SaveTokenToDatabase(db, token); err != nil {
-        return admin, fmt.Errorf("error saving token to database: %v", err)
+        return admin, err
     }
 
     return admin, nil
