@@ -149,29 +149,30 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 	return insertedID, nil
 }
 
-func Login(db *mongo.Database, col string, username string, password string) (string, error) {
-    var User model.Admin
+func Login(db *mongo.Database, col string, username string, password string) (model.Admin, error) {
+    var admin model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
+    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
     if err != nil {
         if errors.Is(err, mongo.ErrNoDocuments) {
-            return "", fmt.Errorf("user not found")
+            return admin, fmt.Errorf("user not found")
         }
-        return "", fmt.Errorf("error finding user: %v", err)
+        return admin, fmt.Errorf("error finding user: %v", err)
     }
 
-    if User.Password != password {
-        return "", fmt.Errorf("invalid password")
+    if admin.Password != password {
+        return admin, fmt.Errorf("invalid password")
     }
 
     token, err := config.GenerateJWT(username)
     if err != nil {
-        return "", fmt.Errorf("error generating token: %v", err)
+        return admin, fmt.Errorf("error generating token: %v", err)
     }
 
-    return token, nil
+    admin.Token = token
+    return admin, nil
 }
 
 func GetDataAdmin(db *mongo.Database, username, password string) (model.Admin, error) {

@@ -95,3 +95,13 @@ func TestGetGamesByName(t *testing.T) {
 
 	fmt.Println("Game found:", games)
 }
+
+func TestGetDataAdmin(t *testing.T) {
+    username := "Zenverse"
+    password := "zenverse123"
+    admin, err := module.GetDataAdmin(module.MongoConn,  username, password)
+    if err != nil {
+        t.Errorf("Failed to get admin: %v", err)
+    }
+    fmt.Println(admin)
+}
