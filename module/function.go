@@ -162,8 +162,8 @@ var jwtKey = []byte("ZnVRsERfnHRsZ")
 
 func generateJWT(username string) (string, error) {
     expirationTime := time.Now().Add(24 * time.Hour)
-    claims := model.Claims{
-        UserName: username,
+    claims := &model.Admin{
+        User_name: username,
         StandardClaims: jwt.StandardClaims{
             ExpiresAt: expirationTime.Unix(),
         },

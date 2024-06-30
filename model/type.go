@@ -30,10 +30,5 @@ type Admin struct {
 	User_name	string 		       `bson:"user_name,omitempty" json:"user_name,omitempty"`
 	Password 	string			   `bson:"password,omitempty" json:"password,omitempty"`
 	Token     	string             `bson:"token,omitempty" json:"token,omitempty"`
+	jwt.StandardClaims
 }
-
-type Claims struct {
-    UserName string 				`bson:"username,omitempty" json:"username,omitempty"`
-    jwt.StandardClaims
-}
-
