@@ -151,11 +151,14 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 
 
 func GetDataToken(db *mongo.Database, token string) (model.Admin, error) {
-    var admin model.Admin
-    collection := db.Collection("Admin")
-    filter := bson.M{"token": token}
-    err := collection.FindOne(context.Background(), filter).Decode(&admin)
-    return admin, err
+	var admin model.Admin
+	collection := db.Collection("Admin")
+	filter := bson.M{"token": token}
+	err := collection.FindOne(context.Background(), filter).Decode(&admin)
+	if err != nil {
+		return admin, err
+	}
+	return admin, nil
 }
 
 var jwtKey = []byte("ZnVRsERfnHRsZ")

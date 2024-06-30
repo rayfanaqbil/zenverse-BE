@@ -129,7 +129,7 @@ func TestGetGamesByName(t *testing.T) {
 }
 
 func TestGetDataToken(t *testing.T) {
-    token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlplbnZlcnNlIiwiZXhwIjoxNzE5ODY5NzQzfQ.JXnznLZu-zoxIu2DN_sFgJAIprkGuLBxD_kGowN-Mq8"
+    token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLCJ1c2VyX25hbWUiOiJaZW52ZXJzZSIsImV4cCI6MTcxOTg3NTg1MH0.UKNeQo4__4UZ6xocWjpkpLwMCUwDwTIkOMKVZKn8Mko"
     admin, err := module.GetDataToken(module.MongoConn,  token)
     if err != nil {
         t.Errorf("Failed to get token: %v", err)
