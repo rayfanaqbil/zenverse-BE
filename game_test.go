@@ -3,10 +3,12 @@ package _zenverse
 import (
 	"fmt"
 	"testing"
-
+	"context"
+	"go.mongodb.org/mongo-driver/bson"
 	"github.com/rayfanaqbil/zenverse-BE/model"
 	"github.com/rayfanaqbil/zenverse-BE/module"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 func TestInsertGames(t *testing.T) {
@@ -83,6 +85,36 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Login failed: %v", err)
 	} else {
 		fmt.Printf("Login successful: %v\n", admin)
+	}
+}
+
+func TestLogout(t *testing.T) {
+	username := "Zenverse"
+	password := "zenverse123"
+
+	_, err := module.Login(module.MongoConn, "Admin", username, password)
+	if err != nil {
+		t.Fatalf("Login failed: %v", err)
+	}
+
+	err = module.Logout(module.MongoConn, "Admin", username)
+	if err != nil {
+		t.Errorf("Logout failed: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	var admin model.Admin
+	err = module.MongoConn.Collection("Admin").FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
+	if err != nil {
+		t.Errorf("Failed to find admin after logout: %v", err)
+	}
+
+	if admin.Token != "" {
+		t.Errorf("Expected token to be removed, but found: %s", admin.Token)
+	} else {
+		fmt.Println("Logout successful and token removed")
 	}
 }
 
