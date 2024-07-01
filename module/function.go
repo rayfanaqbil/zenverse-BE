@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"errors"
 	"time"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/rayfanaqbil/zenverse-BE/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -151,25 +151,23 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 
 
 func GetDataToken(db *mongo.Database, token string) (model.Admin, error) {
-	var admin model.Admin
-	collection := db.Collection("Admin")
-	filter := bson.M{"token": token}
-	err := collection.FindOne(context.Background(), filter).Decode(&admin)
-	if err != nil {
-		return admin, err
-	}
-	return admin, nil
+    var admin model.Admin
+    collection := db.Collection("Admin")
+    filter := bson.M{"token": token}
+    err := collection.FindOne(context.Background(), filter).Decode(&admin)
+    if err != nil {
+        return admin, err
+    }
+    return admin, nil
 }
 
 var jwtKey = []byte("ZnVRsERfnHRsZ")
 
-func generateJWT(username string) (string, error) {
+func GenerateJWT(username string) (string, error) {
     expirationTime := time.Now().Add(24 * time.Hour)
-    claims := &model.Admin{
-        User_name: username,
-        StandardClaims: jwt.StandardClaims{
-            ExpiresAt: expirationTime.Unix(),
-        },
+    claims := &jwt.RegisteredClaims{
+        ExpiresAt: jwt.NewNumericDate(expirationTime),
+        Subject:   username,
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -197,28 +195,16 @@ func Login(db *mongo.Database, col string, username string, password string) (mo
         return model.Admin{}, fmt.Errorf("invalid password")
     }
 
-    token, err := generateJWT(username)
+    token, err := GenerateJWT(username)
     if err != nil {
-        return model.Admin{}, fmt.Errorf("failed to generate token: %v", err)
+        return model.Admin{}, fmt.Errorf("error generating token: %v", err)
     }
 
     user.Token = token
-
-    _, err = db.Collection(col).UpdateOne(ctx, bson.M{"user_name": username}, bson.M{"$set": bson.M{"token": token}})
+    _, err = db.Collection(col).UpdateOne(ctx, bson.M{"_id": user.ID}, bson.M{"$set": bson.M{"token": token}})
     if err != nil {
-        return model.Admin{}, fmt.Errorf("failed to save token: %v", err)
+        return model.Admin{}, fmt.Errorf("error updating user with token: %v", err)
     }
 
     return user, nil
-}
-
-func Logout(db *mongo.Database, col string, username string) error {
-    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-    defer cancel()
-
-    _, err := db.Collection(col).UpdateOne(ctx, bson.M{"user_name": username}, bson.M{"$unset": bson.M{"token": ""}})
-    if err != nil {
-        return err
-    }
-    return nil
 }

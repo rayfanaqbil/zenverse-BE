@@ -3,12 +3,9 @@ package _zenverse
 import (
 	"fmt"
 	"testing"
-	"context"
-	"go.mongodb.org/mongo-driver/bson"
 	"github.com/rayfanaqbil/zenverse-BE/model"
 	"github.com/rayfanaqbil/zenverse-BE/module"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 func TestInsertGames(t *testing.T) {
@@ -88,36 +85,6 @@ func TestLogin(t *testing.T) {
 	}
 }
 
-func TestLogout(t *testing.T) {
-	username := "Zenverse"
-	password := "zenverse123"
-
-	_, err := module.Login(module.MongoConn, "Admin", username, password)
-	if err != nil {
-		t.Fatalf("Login failed: %v", err)
-	}
-
-	err = module.Logout(module.MongoConn, "Admin", username)
-	if err != nil {
-		t.Errorf("Logout failed: %v", err)
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	var admin model.Admin
-	err = module.MongoConn.Collection("Admin").FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
-	if err != nil {
-		t.Errorf("Failed to find admin after logout: %v", err)
-	}
-
-	if admin.Token != "" {
-		t.Errorf("Expected token to be removed, but found: %s", admin.Token)
-	} else {
-		fmt.Println("Logout successful and token removed")
-	}
-}
-
 func TestGetGamesByName(t *testing.T) {
 	name := "Resident Evil 2 Remake"
 	games, err := module.GetGamesByName(module.MongoConn, "Games", name)
@@ -129,7 +96,7 @@ func TestGetGamesByName(t *testing.T) {
 }
 
 func TestGetDataToken(t *testing.T) {
-    token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLCJ1c2VyX25hbWUiOiJaZW52ZXJzZSIsImV4cCI6MTcxOTg3NTg1MH0.UKNeQo4__4UZ6xocWjpkpLwMCUwDwTIkOMKVZKn8Mko"
+    token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJaZW52ZXJzZSIsImV4cCI6MTcxOTkyMTQ0OH0.Jhq6v_9za0JGdybaeT3ukc8NuywLWdUvEfVD_eeAjgU"
     admin, err := module.GetDataToken(module.MongoConn,  token)
     if err != nil {
         t.Errorf("Failed to get token: %v", err)
