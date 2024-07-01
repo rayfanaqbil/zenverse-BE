@@ -7,7 +7,7 @@ import (
 	"errors"
 	"time"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/rayfanaqbil/zenverse-BE/model"
+	"github.com/rayfanaqbil/zenverse-BE/v2/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -3,8 +3,8 @@ package _zenverse
 import (
 	"fmt"
 	"testing"
-	"github.com/rayfanaqbil/zenverse-BE/model"
-	"github.com/rayfanaqbil/zenverse-BE/module"
+	"github.com/rayfanaqbil/zenverse-BE/v2/model"
+	"github.com/rayfanaqbil/zenverse-BE/v2/module"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
