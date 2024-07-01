@@ -1,4 +1,4 @@
-module github.com/rayfanaqbil/zenverse-BE
+module github.com/rayfanaqbil/zenverse-BE/v2
 
 go 1.22.0
 
