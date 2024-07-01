@@ -77,11 +77,11 @@ func TestInsertAdmin(t *testing.T) {
 func TestLogin(t *testing.T) {
 	username := "Zenverse"
 	password := "zenverse123"
-	admin, err := module.Login(module.MongoConn, "Admin", username, password)
+	admin, token, err := module.Login(module.MongoConn, "Admin", username, password)
 	if err != nil {
 		t.Errorf("Login failed: %v", err)
 	} else {
-		fmt.Printf("Login successful: %v\n", admin)
+		fmt.Printf("Login successful. Admin: %v, Token: %s\n", admin, token)
 	}
 }
 

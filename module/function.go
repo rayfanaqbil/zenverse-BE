@@ -165,9 +165,11 @@ var jwtKey = []byte("ZnVRsERfnHRsZ")
 
 func GenerateJWT(username string) (string, error) {
     expirationTime := time.Now().Add(24 * time.Hour)
-    claims := &jwt.RegisteredClaims{
-        ExpiresAt: jwt.NewNumericDate(expirationTime),
-        Subject:   username,
+    claims := &model.Claims{
+        StandardClaims: jwt.StandardClaims{
+            ExpiresAt: expirationTime.Unix(),
+        },
+        Username: username,
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -178,33 +180,27 @@ func GenerateJWT(username string) (string, error) {
     return tokenString, nil
 }
 
-func Login(db *mongo.Database, col string, username string, password string) (model.Admin, error) {
-    var user model.Admin
+func Login(db *mongo.Database, col string, username string, password string) (model.Admin, string, error) {
+    var User model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&user)
+    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
     if err != nil {
-        if errors.Is(err, mongo.ErrNoDocuments) {
-            return model.Admin{}, fmt.Errorf("user not found")
+        if err == mongo.ErrNoDocuments {
+            return model.Admin{}, "", fmt.Errorf("user not found")
         }
-        return model.Admin{}, fmt.Errorf("error finding user: %v", err)
+        return model.Admin{}, "", fmt.Errorf("error finding user: %v", err)
     }
 
-    if user.Password != password {
-        return model.Admin{}, fmt.Errorf("invalid password")
+    if User.Password != password {
+        return model.Admin{}, "", fmt.Errorf("invalid password")
     }
 
-    token, err := GenerateJWT(username)
+    token, err := GenerateJWT(User.User_name)
     if err != nil {
-        return model.Admin{}, fmt.Errorf("error generating token: %v", err)
+        return model.Admin{}, "", fmt.Errorf("error generating token: %v", err)
     }
 
-    user.Token = token
-    _, err = db.Collection(col).UpdateOne(ctx, bson.M{"_id": user.ID}, bson.M{"$set": bson.M{"token": token}})
-    if err != nil {
-        return model.Admin{}, fmt.Errorf("error updating user with token: %v", err)
-    }
-
-    return user, nil
+    return User, token, nil
 }
