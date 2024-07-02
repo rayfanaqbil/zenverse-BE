@@ -2,7 +2,6 @@ package model
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 type Games struct {
@@ -25,19 +24,9 @@ type Developer struct {
 	Bio  string             `bson:"dev_bio,omitempty" json:"bio,omitempty"`
 }
 
-type Credentials struct {
-    Username string 				`bson:"user_name,omitempty" json:"username,omitempty"`
-    Password string 				`bson:"password,omitempty" json:"password,omitempty"`
-}
-
-type Claims struct {
-    Username string 				`bson:"user_name,omitempty" json:"username,omitempty"`
-    jwt.StandardClaims
-}
 
 type Admin struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
     User_name string             `bson:"user_name,omitempty" json:"user_name,omitempty"`
     Password  string             `bson:"password,omitempty" json:"password,omitempty"`
-    Token     string             `bson:"token,omitempty" json:"token,omitempty"`
 }

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"errors"
 	"time"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/rayfanaqbil/zenverse-BE/v2/config"
 	"github.com/rayfanaqbil/zenverse-BE/v2/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -161,46 +161,27 @@ func GetDataToken(db *mongo.Database, token string) (model.Admin, error) {
     return admin, nil
 }
 
-var jwtKey = []byte("ZnVRsERfnHRsZ")
-
-func GenerateJWT(username string) (string, error) {
-    expirationTime := time.Now().Add(24 * time.Hour)
-    claims := &model.Claims{
-        StandardClaims: jwt.StandardClaims{
-            ExpiresAt: expirationTime.Unix(),
-        },
-        Username: username,
-    }
-
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    tokenString, err := token.SignedString(jwtKey)
-    if err != nil {
-        return "", err
-    }
-    return tokenString, nil
-}
-
-func Login(db *mongo.Database, col string, username string, password string) (model.Admin, string, error) {
+func Login(db *mongo.Database, col string, username string, password string) (string, error) {
     var User model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
     err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
     if err != nil {
-        if err == mongo.ErrNoDocuments {
-            return model.Admin{}, "", fmt.Errorf("user not found")
+        if errors.Is(err, mongo.ErrNoDocuments) {
+            return "", fmt.Errorf("user not found")
         }
-        return model.Admin{}, "", fmt.Errorf("error finding user: %v", err)
+        return "", fmt.Errorf("error finding user: %v", err)
     }
 
     if User.Password != password {
-        return model.Admin{}, "", fmt.Errorf("invalid password")
+        return "", fmt.Errorf("invalid password")
     }
 
-    token, err := GenerateJWT(User.User_name)
+    token, err := config.GenerateJWT(username)
     if err != nil {
-        return model.Admin{}, "", fmt.Errorf("error generating token: %v", err)
+        return "", fmt.Errorf("error generating token: %v", err)
     }
 
-    return User, token, nil
+    return token, nil
 }
