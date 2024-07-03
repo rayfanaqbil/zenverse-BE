@@ -149,18 +149,6 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 	return insertedID, nil
 }
 
-
-func GetDataToken(db *mongo.Database, token string) (model.Admin, error) {
-    var admin model.Admin
-    collection := db.Collection("Admin")
-    filter := bson.M{"token": token}
-    err := collection.FindOne(context.Background(), filter).Decode(&admin)
-    if err != nil {
-        return admin, err
-    }
-    return admin, nil
-}
-
 func Login(db *mongo.Database, col string, username string, password string) (string, error) {
     var User model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -184,4 +172,27 @@ func Login(db *mongo.Database, col string, username string, password string) (st
     }
 
     return token, nil
+}
+
+func SaveTokenToDatabase(db *mongo.Database, col string, adminID string, token string) error {
+    collection := db.Collection(col)
+    filter := bson.M{"admin_id": adminID}
+    update := bson.M{
+        "$set": bson.M{
+            "token":      token,
+            "updated_at": time.Now(),
+        },
+    }
+    _, err := collection.UpdateOne(context.Background(), filter, update, options.Update().SetUpsert(true))
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func GetAdminByUsername(db *mongo.Database, col string, username string) (model.Admin, error) {
+    var admins model.Admin
+    err := db.Collection(col).FindOne(context.Background(), bson.M{"user_name": username}).Decode(&admins)
+    return admins, err
 }

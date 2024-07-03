@@ -95,11 +95,12 @@ func TestGetGamesByName(t *testing.T) {
 	fmt.Println("Game found:", games)
 }
 
-func TestGetDataToken(t *testing.T) {
-    token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJaZW52ZXJzZSIsImV4cCI6MTcxOTkyMTQ0OH0.Jhq6v_9za0JGdybaeT3ukc8NuywLWdUvEfVD_eeAjgU"
-    admin, err := module.GetDataToken(module.MongoConn,  token)
-    if err != nil {
-        t.Errorf("Failed to get token: %v", err)
-    }
-    fmt.Println(admin)
+func TestGetAdminByUs(t *testing.T) {
+	username := "Zenverse"
+	admins, err := module.GetAdminByUsername(module.MongoConn, "Admin", username)
+	if err != nil {
+		t.Fatalf("Error calling GetByAdminUsername: %v", err)
+	}
+
+	fmt.Println("Username Found:", admins)
 }
