@@ -149,12 +149,12 @@ func InsertAdmin(db *mongo.Database, col string, username string, password strin
 	return insertedID, nil
 }
 
-func Login(db *mongo.Database, col string, username string, password string) (string, error) {
-    var User model.Admin
+func Login(db *mongo.Database, username string, password string) (string, error) {
+    var admin model.Admin
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     defer cancel()
 
-    err := db.Collection(col).FindOne(ctx, bson.M{"user_name": username}).Decode(&User)
+    err := db.Collection("Admin").FindOne(ctx, bson.M{"user_name": username}).Decode(&admin)
     if err != nil {
         if errors.Is(err, mongo.ErrNoDocuments) {
             return "", fmt.Errorf("user not found")
@@ -162,11 +162,11 @@ func Login(db *mongo.Database, col string, username string, password string) (st
         return "", fmt.Errorf("error finding user: %v", err)
     }
 
-    if User.Password != password {
+    if admin.Password != password {
         return "", fmt.Errorf("invalid password")
     }
 
-    token, err := config.GenerateJWT(username)
+    token, err := config.GenerateJWT(admin.ID.Hex())
     if err != nil {
         return "", fmt.Errorf("error generating token: %v", err)
     }
