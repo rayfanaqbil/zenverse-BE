@@ -174,6 +174,18 @@ func Login(db *mongo.Database, username string, password string) (string, error)
     return token, nil
 }
 
+func DeleteTokenFromMongoDB(db *mongo.Database, col string, token string) error {
+	collection := db.Collection(col)
+	filter := bson.M{"token": token}
+
+	_, err := collection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func SaveTokenToDatabase(db *mongo.Database, col string, adminID string, token string) error {
     collection := db.Collection(col)
     filter := bson.M{"admin_id": adminID}
