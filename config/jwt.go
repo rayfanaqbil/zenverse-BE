@@ -5,6 +5,8 @@ import (
     "github.com/golang-jwt/jwt/v4"
 )
 
+var JWTSecret = "ZeNvErSERynHrSZ"
+
 func GenerateJWT(adminID string) (string, error) {
     claims := jwt.MapClaims{
         "admin_id": adminID,
@@ -12,5 +14,5 @@ func GenerateJWT(adminID string) (string, error) {
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    return token.SignedString([]byte("ZeNvErSERynHrSZ"))
+    return token.SignedString([]byte(JWTSecret))
 }
