@@ -52,7 +52,6 @@ func InsertGames(db *mongo.Database, col string, name string, rating float64, de
 	return insertedID, nil
 }
 
-
 func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 	gem := db.Collection(col)
 	filter := bson.M{}
