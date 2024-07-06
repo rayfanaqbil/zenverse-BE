@@ -69,13 +69,17 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 func GetGamesByName(db *mongo.Database, collection string, name string) ([]model.Games, error) {
     var games []model.Games
     filter := bson.M{"name": bson.M{"$regex": name, "$options": "i"}}
-    cursor, err := db.Collection(collection).Find(context.TODO(), filter)
+    opts := options.Find().SetLimit(10)
+    cursor, err := db.Collection(collection).Find(context.TODO(), filter, opts)
     if err != nil {
         return nil, err
     }
-    if err = cursor.All(context.TODO(), &games); err != nil {
+    defer cursor.Close(context.TODO())
+    
+    if err := cursor.All(context.TODO(), &games); err != nil {
         return nil, err
     }
+    
     return games, nil
 }
 

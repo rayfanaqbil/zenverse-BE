@@ -86,7 +86,7 @@ func TestLogin(t *testing.T) {
 }
 
 func TestGetGamesByName(t *testing.T) {
-	name := "Resident Evil 2 Remake"
+	name := "Resident"
 	games, err := module.GetGamesByName(module.MongoConn, "Games", name)
 	if err != nil {
 		t.Fatalf("Error calling GetGamesByName: %v", err)
