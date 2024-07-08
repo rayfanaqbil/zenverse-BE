@@ -10,7 +10,7 @@ var JWTSecret = "ZeNvErSERynHrSZ"
 func GenerateJWT(adminID string) (string, error) {
     claims := jwt.MapClaims{
         "admin_id": adminID,
-        "exp":      time.Now().Add(time.Hour * 72).Unix(),
+        "exp":      time.Now().Add(time.Hour * 12).Unix(),
     }
 
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
