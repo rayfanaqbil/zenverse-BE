@@ -12,6 +12,12 @@ This project is developed solely by myself, drawing inspiration from various gam
 |Update Data Games| Done✅|
 |Delete Data Games | Done✅|
 |Login Admin | Done✅|
+|Get By Name Games | Done✅|
+|Generate JWT | Done✅|
+|Delete Token| Done✅|
+|Save Token | Done✅|
+|Get Admin By Username | Done✅|
+|Login Admin | Done✅|
 |etc.| Still on planning |
 
 # Update
@@ -31,6 +37,12 @@ This project is developed solely by myself, drawing inspiration from various gam
 |Made Function Delete Data | 14/06/2024 | Major update |
 |Modfify Stuct Games | 24/06/2024 | Minor update |
 |Made Function Login Admin | 24/06/2024 | Major update |
+|Made Function Get by name | 28/06/2024 | Major update |
+|Modify Function Login Static To JWT | 03/07/2024 | Major update |
+|Made Function Generate Token | 03/07/2024 | Major update |
+|Made Function GetByAdmin | 03/07/2024 | Minor update |
+|Made Function Save Token| 03/07/2024 | Major update |
+|Made Function Delete Token | 03/07/2024 | Major update |
 
 
 
