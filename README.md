@@ -3,6 +3,13 @@ I created this project as an example web application for game distribution using
 
 This project is developed solely by myself, drawing inspiration from various game distribution websites. All copyrights for referenced material are owned by their respective creators.
 
+Project Started: Sunday, May 19th 2024.
+Project Finished: Tuesday, July 9th 2024. (7 weeks, 2 days)
+
+Front-end devs & project lead: Haris (https://github.com/hrisz)
+API & Back-end devs: Rayfan (https://github.com/rayfanaqbil)
+
+
 # Major Planning
 |Plans|Status|
 |--|--|
