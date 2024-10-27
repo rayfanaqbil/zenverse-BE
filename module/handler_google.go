@@ -12,7 +12,7 @@ import(
 
 var (
 	GoogleOAuthConfig = &oauth2.Config{
-		RedirectURL:  "https://hrisz.github.io/zenverse_FE/",
+		RedirectURL:  "https://zenversegames-ba223a40f69e.herokuapp.com/auth/google/callback",
 		ClientID: os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
 		Scopes: []string{
