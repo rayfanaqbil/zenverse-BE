@@ -6,9 +6,11 @@ require (
 	github.com/aiteung/atdb v0.1.7
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	go.mongodb.org/mongo-driver v1.15.0
+	golang.org/x/oauth2 v0.23.0
 )
 
 require (
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
