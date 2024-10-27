@@ -11,7 +11,7 @@ import(
 )
 
 var (
-	googleOAuthConfig = &oauth2.Config{
+	GoogleOAuthConfig = &oauth2.Config{
 		RedirectURL:  "https://hrisz.github.io/zenverse_FE/",
 		ClientID: os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
