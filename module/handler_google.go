@@ -24,7 +24,7 @@ var (
 	allowedAdmins = []string{"rayfana09@gmail.com", "harissaefuloh@gmail.com"}
 )
 
-func isAdmin(db *mongo.Database, col string, email string) bool {
+func IsAdmin(db *mongo.Database, col string, email string) bool {
 	var admin model.Admin
 	err := db.Collection(col).FindOne(context.Background(), bson.M{"email": email}).Decode(&admin)
 	return err == nil
