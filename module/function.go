@@ -138,9 +138,10 @@ func DeleteGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) err
 	return nil
 }
 
-func InsertAdmin(db *mongo.Database, col string, username string, password string ) (insertedID primitive.ObjectID, err error) {
+func InsertAdmin(db *mongo.Database, col string, username string, password string, email string) (insertedID primitive.ObjectID, err error) {
 	admin := bson.M{
 	"user_name" : username,
+	"email"		: email,
 	"password"	: password,
 	}
 	result, err := db.Collection(col).InsertOne(context.Background(), admin)
@@ -169,7 +170,7 @@ func Login(db *mongo.Database, username string, password string) (string, error)
         return "", fmt.Errorf("invalid password")
     }
 
-    token, err := config.GenerateJWT(admin.ID.Hex())
+    token, err := config.GenerateJWT(admin)
     if err != nil {
         return "", fmt.Errorf("error generating token: %v", err)
     }

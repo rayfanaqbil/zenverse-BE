@@ -1,18 +1,20 @@
 package config
 
 import (
-    "time"
-    "github.com/golang-jwt/jwt/v4"
+	"os"
+	"time"
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/rayfanaqbil/zenverse-BE/v2/model"
 )
 
-var JWTSecret = "ZeNvErSERynHrSZ"
+func GenerateJWT(admin model.Admin) (string, error) {
+	claims := jwt.MapClaims{}
+	claims["admin_id"] = admin.ID.Hex()
+	claims["email"] = admin.Email
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token valid for 24 hours
 
-func GenerateJWT(adminID string) (string, error) {
-    claims := jwt.MapClaims{
-        "admin_id": adminID,
-        "exp":      time.Now().Add(time.Hour * 12).Unix(),
-    }
 
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-    return token.SignedString([]byte(JWTSecret))
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	secretKey := os.Getenv("JWT_SECRET")
+	return token.SignedString([]byte(secretKey))
 }

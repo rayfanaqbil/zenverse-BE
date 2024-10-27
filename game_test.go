@@ -65,9 +65,10 @@ func TestDeletePresensiByID(t *testing.T) {
 }
 
 func TestInsertAdmin(t *testing.T) {
-	username 	 := "Zenverse"
-	password 	 := "zenverse123"
-	insertedID, err := module.InsertAdmin(module.MongoConn, "Admin", username, password)
+	username 	 := "Haris"
+	email 		 :=	"harissaefuloh@gmail.com"
+	password 	 := "adminharis"
+	insertedID, err := module.InsertAdmin(module.MongoConn, "Admin", username, password, email)
 	if err != nil {
 		t.Errorf("Error inserting data: %v", err)
 	}
