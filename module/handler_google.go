@@ -1,27 +1,9 @@
 package module
 
 import(
-	"golang.org/x/oauth2"
-	"os"
 	"github.com/rayfanaqbil/zenverse-BE/v2/model"
-	"golang.org/x/oauth2/google"
-	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
-)
-
-var (
-	GoogleOAuthConfig = &oauth2.Config{
-		RedirectURL:  "https://zenversegames-ba223a40f69e.herokuapp.com/auth/google/callback",
-		ClientID: os.Getenv("GOOGLE_CLIENT_ID"),
-		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.profile",
-			"https://www.googleapis.com/auth/userinfo.email",
-		},
-		Endpoint:     google.Endpoint,
-	}
-	allowedAdmins = []string{"rayfana09@gmail.com", "harissaefuloh@gmail.com"}
 )
 
 func IsAdmin(db *mongo.Database, col string, email string) bool {
