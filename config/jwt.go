@@ -16,7 +16,7 @@ func GenerateJWT(admin model.Admin) (string, error) {
 
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	secretKey := os.Getenv("JWT_SECRET")
+	secretKey := os.Getenv("JWT_SECRET")	
 	return token.SignedString([]byte(secretKey))
 }
 

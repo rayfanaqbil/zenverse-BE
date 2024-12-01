@@ -230,3 +230,26 @@ func GetAdminByEmail(db *mongo.Database, col string, email string) (*model.Admin
     }
     return &admin, nil
 }
+
+func SaveGoogleUserToDatabase(db *mongo.Database, col string, googleUser model.GoogleUser) error {
+    collection := db.Collection(col) // Menggunakan parameter `col` sebagai nama collection
+
+    filter := bson.M{"email": googleUser.Email}
+    var existingUser model.GoogleUser
+    err := collection.FindOne(context.Background(), filter).Decode(&existingUser)
+    if err == nil {
+        return nil
+    }
+    if err != mongo.ErrNoDocuments {
+        return err
+    }
+
+    // Jika user belum ada, simpan data baru
+    _, err = collection.InsertOne(context.Background(), googleUser)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
+
