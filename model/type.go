@@ -39,3 +39,11 @@ type Token struct{
 	AdminID		string				`bson:"admin_id" json:"admin_id,omitempty"`
 	CreatedAt	time.Time			`bson:"created_at" json:"created_at"` 
 }
+
+type GoogleUser struct {
+	ID            string `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email         string `bson:"email,omitempty" json:"email,omitempty"`
+	VerifiedEmail bool   `bson:"verified_email" json:"verified_email"`
+	Picture       string `bson:"picture" json:"picture"`
+	Name          string `bson:"name" json:"name"`
+}
