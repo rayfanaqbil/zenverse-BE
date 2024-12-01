@@ -207,8 +207,14 @@ func SaveTokenToDatabase(db *mongo.Database, col string, adminID string, token s
     return nil
 }
 
-func GetAdminByUsername(db *mongo.Database, col string, username string) (model.Admin, error) {
-    var admins model.Admin
-    err := db.Collection(col).FindOne(context.Background(), bson.M{"user_name": username}).Decode(&admins)
-    return admins, err
+func GetAdminByUsername(db *mongo.Database, col string, username string) (*model.Admin, error) {
+    var admin model.Admin
+    err := db.Collection(col).FindOne(context.Background(), bson.M{"user_name": username}).Decode(&admin)
+    if err == mongo.ErrNoDocuments {
+        return nil, nil 
+    }
+    if err != nil {
+        return nil, err
+    }
+    return &admin, nil
 }
