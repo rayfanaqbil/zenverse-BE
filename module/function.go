@@ -218,3 +218,15 @@ func GetAdminByUsername(db *mongo.Database, col string, username string) (*model
     }
     return &admin, nil
 }
+
+func GetAdminByEmail(db *mongo.Database, col string, email string) (*model.Admin, error) {
+	var admin model.Admin
+    err := db.Collection(col).FindOne(context.Background(), bson.M{"email": email}).Decode(&admin)
+    if err == mongo.ErrNoDocuments {
+        return nil, nil 
+    }
+    if err != nil {
+        return nil, err
+    }
+    return &admin, nil
+}
