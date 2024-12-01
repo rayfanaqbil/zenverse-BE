@@ -5,6 +5,7 @@ import (
 	"time"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/rayfanaqbil/zenverse-BE/v2/model"
+	 "golang.org/x/crypto/bcrypt"
 )
 
 func GenerateJWT(admin model.Admin) (string, error) {
@@ -17,4 +18,9 @@ func GenerateJWT(admin model.Admin) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	secretKey := os.Getenv("JWT_SECRET")
 	return token.SignedString([]byte(secretKey))
+}
+
+func HashPassword(password string) (string, error) {
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+    return string(bytes), err
 }
