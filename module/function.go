@@ -260,4 +260,16 @@ func AddToBlacklist(db *mongo.Database, collection string, token string) error {
 	return err
 }
 
+func IsTokenBlacklisted(db *mongo.Database, collection string, token string) (bool, error) {
+	var result bson.M
+	err := db.Collection(collection).FindOne(context.Background(), bson.M{"token": token}).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
 
