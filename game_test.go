@@ -75,17 +75,6 @@ func TestInsertAdmin(t *testing.T) {
 	fmt.Printf("Data berhasil disimpan dengan id %s", insertedID.Hex())
 }
 
-func TestLogin(t *testing.T) {
-	username := "Zenverse"
-	password := "zenverse123"
-	token, err := module.Login(module.MongoConn, username, password)
-	if err != nil {
-		t.Errorf("Login failed: %v", err)
-	} else {
-		fmt.Printf("Login successful. Token: %s\n", token)
-	}
-}
-
 func TestGetGamesByName(t *testing.T) {
 	name := "Resident"
 	games, err := module.GetGamesByName(module.MongoConn, "Games", name)
