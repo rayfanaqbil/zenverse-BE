@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"regexp"
 )
 
 func MongoConnect(dbname string) (db *mongo.Database) {
@@ -208,7 +209,10 @@ func SaveTokenToDatabase(db *mongo.Database, col string, adminID string, token s
 }
 
 func GetAdminByUsername(db *mongo.Database, col string, username string) (*model.Admin, error) {
-    var admin model.Admin
+    if err := validateUsername(username); err != nil {
+		return nil, err
+	}
+	var admin model.Admin
     err := db.Collection(col).FindOne(context.Background(), bson.M{"user_name": username}).Decode(&admin)
     if err == mongo.ErrNoDocuments {
         return nil, nil 
@@ -232,7 +236,7 @@ func GetAdminByEmail(db *mongo.Database, col string, email string) (*model.Admin
 }
 
 func SaveGoogleUserToDatabase(db *mongo.Database, col string, googleUser model.GoogleUser) error {
-    collection := db.Collection(col) // Menggunakan parameter `col` sebagai nama collection
+    collection := db.Collection(col)
 
     filter := bson.M{"email": googleUser.Email}
     var existingUser model.GoogleUser
@@ -270,6 +274,14 @@ func IsTokenBlacklisted(db *mongo.Database, collection string, token string) (bo
 		return false, err
 	}
 	return true, nil
+}
+
+func validateUsername(username string) error {
+	re := regexp.MustCompile("^[a-zA-Z0-9_]+$")
+	if !re.MatchString(username) {
+		return errors.New("invalid username format")
+	}
+	return nil
 }
 
 
