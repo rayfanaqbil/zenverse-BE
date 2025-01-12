@@ -244,12 +244,20 @@ func SaveGoogleUserToDatabase(db *mongo.Database, col string, googleUser model.G
         return err
     }
 
-    // Jika user belum ada, simpan data baru
     _, err = collection.InsertOne(context.Background(), googleUser)
     if err != nil {
         return err
     }
     return nil
+}
+
+func AddToBlacklist(db *mongo.Database, collection string, token string) error {
+	blacklistEntry := bson.M{
+		"token":     token,
+		"createdAt": time.Now(),
+	}
+	_, err := db.Collection(collection).InsertOne(context.Background(), blacklistEntry)
+	return err
 }
 
 
