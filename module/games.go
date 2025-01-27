@@ -121,4 +121,22 @@ func DeleteGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) err
 	return nil
 }
 
+func GetGamesByHighestRating(db *mongo.Database, col string) ([]model.Games, error) {
+    var games []model.Games
+    filter := bson.M{} 
+    opts := options.Find().SetSort(bson.M{"rating": -1})
+    
+    cursor, err := db.Collection(col).Find(context.TODO(), filter, opts)
+    if err != nil {
+        return nil, fmt.Errorf("error fetching games: %v", err)
+    }
+    defer cursor.Close(context.TODO())
+    
+    if err := cursor.All(context.TODO(), &games); err != nil {
+        return nil, fmt.Errorf("error decoding games: %v", err)
+    }
+    
+    return games, nil
+}
+
 
