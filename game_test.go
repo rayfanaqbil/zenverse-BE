@@ -64,17 +64,6 @@ func TestDeletePresensiByID(t *testing.T) {
 	}
 }
 
-func TestInsertAdmin(t *testing.T) {
-	username 	 := "Haris"
-	email 		 :=	"harissaefuloh@gmail.com"
-	password 	 := "adminharis"
-	insertedID, err := module.InsertAdmin(module.MongoConn, "Admin", username, password, email)
-	if err != nil {
-		t.Errorf("Error inserting data: %v", err)
-	}
-	fmt.Printf("Data berhasil disimpan dengan id %s", insertedID.Hex())
-}
-
 func TestGetGamesByName(t *testing.T) {
 	name := "Resident"
 	games, err := module.GetGamesByName(module.MongoConn, "Games", name)
