@@ -42,7 +42,7 @@ func validateUsername(username string) error {
 	return nil
 }
 
-func InsertAdmin(db *mongo.Database, col string, username string, name string,  password string, email string) (insertedID primitive.ObjectID, err error) {
+func InsertAdmin(db *mongo.Database, col string, username string, name string,  password string) (insertedID primitive.ObjectID, err error) {
 	admin := bson.M{
 	"user_name" : username,
 	"name": name,
