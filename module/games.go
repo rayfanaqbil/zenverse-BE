@@ -49,6 +49,28 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 	return
 }
 
+func GetAllDataGamesApps(db *mongo.Database, col string) (data []model.Games) {
+	gem := db.Collection(col)
+	filter := bson.M{}
+
+	findOptions := options.Find()
+	findOptions.SetLimit(10)
+
+	cursor, err := gem.Find(context.TODO(), filter, findOptions)
+	if err != nil {
+		fmt.Println("GetAllDataGames: ", err)
+		return
+	}
+	defer cursor.Close(context.TODO())
+
+	err = cursor.All(context.TODO(), &data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	return
+}
+
 func GetGamesByName(db *mongo.Database, collection string, name string) ([]model.Games, error) {
     var games []model.Games
     filter := bson.M{"name": bson.M{"$regex": name, "$options": "i"}}

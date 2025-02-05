@@ -132,16 +132,3 @@ func SaveGoogleUserToDatabase(db *mongo.Database, col string, googleUser model.G
     }
     return nil
 }
-
-func CreateTTLIndex(db *mongo.Database, collection string) error {
-    indexModel := mongo.IndexModel{
-        Keys: bson.M{"createdAt": 1}, 
-        Options: options.Index().SetExpireAfterSeconds(259200),
-    }
-
-    _, err := db.Collection(collection).Indexes().CreateOne(context.Background(), indexModel)
-    if err != nil {
-        return fmt.Errorf("failed to create TTL index: %v", err)
-    }
-    return nil
-}
