@@ -146,7 +146,8 @@ func DeleteGamesByID(_id primitive.ObjectID, db *mongo.Database, col string) err
 func GetGamesByHighestRating(db *mongo.Database, col string) ([]model.Games, error) {
     var games []model.Games
     filter := bson.M{} 
-    opts := options.Find().SetSort(bson.M{"rating": -1})
+    opts := options.Find().SetSort(bson.M{"rating": -1}).
+	SetLimit(5)
     
     cursor, err := db.Collection(col).Find(context.TODO(), filter, opts)
     if err != nil {
