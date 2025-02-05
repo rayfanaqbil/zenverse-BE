@@ -49,12 +49,13 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 	return
 }
 
-func GetAllDataGamesApps(db *mongo.Database, col string) (data []model.Games) {
+func GetAllDataGamesApps(db *mongo.Database, col string, skip int64) (data []model.Games) {
 	gem := db.Collection(col)
 	filter := bson.M{}
 
 	findOptions := options.Find()
 	findOptions.SetLimit(10)
+	findOptions.SetSkip(skip)
 
 	cursor, err := gem.Find(context.TODO(), filter, findOptions)
 	if err != nil {
