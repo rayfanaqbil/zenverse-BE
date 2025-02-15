@@ -51,7 +51,7 @@ func GetAllDataGames(db *mongo.Database, col string) (data []model.Games) {
 
 func GetAllDataGamesApps(db *mongo.Database, col string, skip int64) (data []model.Games) {
 	gem := db.Collection(col)
-	filter := bson.M{"rating": bson.M{"$gt": 1}}
+	filter := bson.M{}
 
 	findOptions := options.Find()
 	findOptions.SetLimit(10)
