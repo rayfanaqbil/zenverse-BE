@@ -56,6 +56,7 @@ func GetAllDataGamesApps(db *mongo.Database, col string, skip int64) (data []mod
 	findOptions := options.Find()
 	findOptions.SetLimit(10)
 	findOptions.SetSkip(skip)
+	findOptions.SetSort(bson.D{{Key: "name", Value: 1}})
 
 	cursor, err := gem.Find(context.TODO(), filter, findOptions)
 	if err != nil {
